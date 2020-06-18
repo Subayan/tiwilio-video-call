@@ -1,6 +1,13 @@
 (async () => {
   try {
+    let query = window.location.search;
+    let name = new URLSearchParams(query).get('name');
+    console.log(name);
+    if(!name){
+      return alert('Put your name into URL ');
+    }
     const Video = Twilio.Video;
+    
     var videoElement = document.querySelector('video#videoinputpreview');
     let token = await fetch('/token?identity=sm').then(response => response.text())
     await getDeviceSelectionOptions();
