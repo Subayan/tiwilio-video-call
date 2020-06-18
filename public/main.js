@@ -18,7 +18,9 @@
     //   console.log(room);
     window.room =  room;  
     room.on('participantConnected', participant => {
-      participantConnected(participant, room);
+        console.log('New Conneted to Room');
+        console.log(participant);
+        participantConnected(participant, room);
     });
     // console.log(room)
     room.localParticipant.tracks.forEach(function (publication) {
