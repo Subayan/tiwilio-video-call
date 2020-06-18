@@ -9,7 +9,7 @@
     const Video = Twilio.Video;
     
     var videoElement = document.querySelector('video#videoinputpreview');
-    let token = await fetch('/token?identity=sm').then(response => response.text())
+    let token = await fetch('/token?identity='+name).then(response => response.text())
     await getDeviceSelectionOptions();
     await displayLocalVideo(videoElement);
     let room = await Video.connect(token, {
