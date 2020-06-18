@@ -17,15 +17,16 @@
     // }).then(function (room) {
     //   console.log(room);
     window.room =  room;  
-    room.on('participantConnected', participant => {
-        console.log('New Conneted to Room');
-        console.log(participant);
-        participantConnected(participant, room);
-    });
+  
     // console.log(room)
     room.localParticipant.tracks.forEach(function (publication) {
       console.log('The LocalTrack "' + publication.trackName + '" was successfully published');
     });
+    room.on('participantConnected', participant => {
+      console.log('New Conneted to Room');
+      console.log(participant);
+      participantConnected(participant, room);
+  });
     // }).catch(error => {
     //   console.log('Could not connect to the Room:', error.message);
     // });
