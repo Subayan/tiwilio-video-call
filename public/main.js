@@ -11,7 +11,11 @@ let muteAudio, videoMute;
     
     var videoElement = document.querySelector('video#videoinputpreview');
     let token = await fetch('/token?identity='+name).then(response => response.text())
-    await getDeviceSelectionOptions();
+    let device = await getDeviceSelectionOptions();
+    addToSelecElement('audiooutput',device.audiooutput)
+    addToSelecElement('audioinput',device.audioinput)
+    addToSelecElement('videoinput',device.videoinput)
+    console.log(device);
     await displayLocalVideo(videoElement);
     let room = await Video.connect(token, {
       name: 'subayan-room',
@@ -20,6 +24,10 @@ let muteAudio, videoMute;
       },
       video: {
         name: 'camera'
+      },
+      networkQuality: {
+        local: 3,
+        remote: 3
       }
     })
     // }).then(function (room) {
@@ -194,6 +202,20 @@ let muteAudio, videoMute;
 
   muteAudio();
   videoMute();
+
+  function addToSelecElement(id,options){
+          let select = document.getElementById(id);
+          for (let index = 0; index < options.length; index++) {
+            const opt = options[index];
+            if(id==opt.kind){ 
+              let el = document.createElement("option");
+              el.textContent = opt.label;
+              el.value = opt.deviceId;
+              el.dataset.groupId = opt.groupId;
+              select.appendChild(el);
+            }
+          }
+        }
   } catch (error) {
     console.log(error)
   }
