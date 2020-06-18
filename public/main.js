@@ -22,11 +22,17 @@
     room.localParticipant.tracks.forEach(function (publication) {
       console.log('The LocalTrack "' + publication.trackName + '" was successfully published');
     });
-    room.on('participantConnected', participant => {
-      console.log('New Conneted to Room');
-      console.log(participant);
-      participantConnected(participant, room);
-  });
+  //   room.on('participantConnected', participant => {
+  //     console.log('New Conneted to Room');
+  //     console.log(participant);
+  //     participantConnected(participant, room);
+  // });
+
+  room.participants.forEach(participantConnected);
+  room.on('participantConnected', participantConnected);
+
+  room.on('participantDisconnected', participantDisconnected);
+  room.once('disconnected', error => room.participants.forEach(participantDisconnected));
     // }).catch(error => {
     //   console.log('Could not connect to the Room:', error.message);
     // });
