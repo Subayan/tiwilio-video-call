@@ -23,38 +23,39 @@ const MAX_ALLOWED_SESSION_DURATION = 14400;
 const app = express();
 
 // Set up the paths for the examples.
-[
-  'bandwidthconstraints',
-  'codecpreferences',
-  'dominantspeaker',
-  'localvideofilter',
-  'localvideosnapshot',
-  'mediadevices',
-  'networkquality',
-  'reconnection',
-  'screenshare',
-  'localmediacontrols',
-  'remotereconnection'
+// [
+//   'bandwidthconstraints',
+//   'codecpreferences',
+//   'dominantspeaker',
+//   'localvideofilter',
+//   'localvideosnapshot',
+//   'mediadevices',
+//   'networkquality',
+//   'reconnection',
+//   'screenshare',
+//   'localmediacontrols',
+//   'remotereconnection'
 
-].forEach(example => {
-  const examplePath = path.join(__dirname, `../examples/${example}/public`);
-  app.use(`/${example}`, express.static(examplePath));
-});
+// ].forEach(example => {
+//   const examplePath = path.join(__dirname, `../examples/${example}/public`);
+//   app.use(`/${example}`, express.static(examplePath));
+// });
 
 // Set up the path for the quickstart.
-const quickstartPath = path.join(__dirname, '../quickstart/public');
-app.use('/quickstart', express.static(quickstartPath));
-
+app.use('/', express.static(path.join(__dirname, 'public')));
+app.get('/quickstart', (req,res)=>{
+  res.redirect('/');
+})
 // Set up the path for the examples page.
-const examplesPath = path.join(__dirname, '../examples');
-app.use('/examples', express.static(examplesPath));
+// const examplesPath = path.join(__dirname, '../examples');
+// app.use('/examples', express.static(examplesPath));
 
 /**
  * Default to the Quick Start application.
  */
-app.get('/', (request, response) => {
-  response.redirect('/quickstart');
-});
+// app.get('/', (request, response) => {
+//   response.redirect('/quickstart');
+// });
 
 /**
  * Generate an Access Token for a chat application user - it generates a random
@@ -85,8 +86,11 @@ app.get('/token', function(request, response) {
 });
 
 // Create http server and run it.
-const server = http.createServer(app);
-const port = process.env.PORT || 3000;
-server.listen(port, function() {
-  console.log('Express server running on *:' + port);
-});
+app.listen(process.env.PORT || 3000, function() {
+    console.log('Express server running on *:' + process.env.PORT || 3000);
+  })
+// const server = http.createServer(app);
+// const port = process.env.PORT || 3000;
+// server.listen(port, function() {
+//   console.log('Express server running on *:' + port);
+// });

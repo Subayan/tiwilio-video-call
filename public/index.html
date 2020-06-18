@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Video Calling</title>
+
+  <style>
+    body{
+      position: relative;
+      background: #000;
+    }
+    video#videoinputpreview{
+      height: 100px;
+      width: 134px;
+      border: 1px solid #0d5a24;
+      position: fixed;
+      right: 20px;
+      bottom: 20px;;
+      z-index: 100;
+    }
+    .callVideo{
+      height: 100%;
+      width: 100%;
+      position: absolute;  
+    }
+    
+  </style>
+</head>
+<body>
+
+  <video id="videoinputpreview" autoplay></video>
+  <script src="//media.twiliocdn.com/sdk/js/video/releases/2.5.0/twilio-video.min.js"></script>
+  <script src="./main.js"></script>
+
+</body>
+</html>
