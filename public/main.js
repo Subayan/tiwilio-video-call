@@ -178,6 +178,12 @@
     });
   }
 
+  let audioMuteStatus = 'unmute'
+  function muteAudio(){
+    audioMuteStatus =  audioMuteStatus=='mute'?'unmute':'mute';
+    muteOrUnmuteYourMedia(room, 'audio', audioMuteStatus)
+    document.getElementById('buttonMute').innerHTML = audioMuteStatus;
+  }
 
   } catch (error) {
     console.log(error)
