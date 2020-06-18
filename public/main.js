@@ -1,3 +1,4 @@
+let muteAudio, videoMute;
 (async () => {
   try {
     let query = window.location.search;
@@ -178,13 +179,21 @@
     });
   }
 
-  let audioMuteStatus = 'unmute'
-  function muteAudio(){
+  let audioMuteStatus = 'mute'
+  let videoMuteStatus = 'mute'
+  muteAudio = function(){
     audioMuteStatus =  audioMuteStatus=='mute'?'unmute':'mute';
     muteOrUnmuteYourMedia(room, 'audio', audioMuteStatus)
-    document.getElementById('buttonMute').innerHTML = audioMuteStatus;
+    document.getElementById('buttonMute').innerHTML = 'Audio ' + audioMuteStatus;
+  }
+  videoMute = function(){
+    videoMuteStatus =  videoMuteStatus=='mute'?'unmute':'mute';
+    muteOrUnmuteYourMedia(room, 'video', videoMuteStatus)
+    document.getElementById('buttonMute2').innerHTML = 'Video ' + videoMuteStatus;
   }
 
+  muteAudio();
+  videoMute();
   } catch (error) {
     console.log(error)
   }
