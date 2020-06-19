@@ -257,7 +257,7 @@ let muteAudio, videoMute, participantId, audioOutChanged, videoInChanged;
             exact: deviceId
           }
         }).then(function(localTrack) {
-          localTrack.attach(video);
+          localTrack.attach(videoElement);
           if (room) {
             switchLocalTracks(room, localTrack);
           }
