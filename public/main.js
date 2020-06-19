@@ -219,7 +219,7 @@ let muteAudio, videoMute, participantId, audioOutChanged, videoInChanged;
         }
 
     audioOutChanged =  function(){
-      let selectValue  = document.getElementById('audiooutput').value;
+      let selectValue  = document.getElementById('audioinput').value;
       let deviceId  = selectValue.split(':')[0]
       let groupId  = selectValue.split(':')[1]
       console.log(deviceId);
