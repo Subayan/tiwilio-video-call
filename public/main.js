@@ -1,4 +1,4 @@
-let muteAudio, videoMute;
+let muteAudio, videoMute, participantId, audioOutChanged, videoInChanged;
 (async () => {
   try {
     let query = window.location.search;
@@ -36,6 +36,7 @@ let muteAudio, videoMute;
   
     // console.log(room)
     room.localParticipant.tracks.forEach(function (publication) {
+      console.log(publication)
       console.log('The LocalTrack "' + publication.trackName + '" was successfully published');
     });
   //   room.on('participantConnected', participant => {
@@ -63,7 +64,7 @@ let muteAudio, videoMute;
 
     function participantConnected(participant) {
       console.log('Participant "%s" connected', participant.identity);
-
+      participantId = participant.sid;
       const div = document.createElement('div');
       div.id = participant.sid;
       div.innerText = participant.identity;
@@ -210,12 +211,134 @@ let muteAudio, videoMute;
             if(id==opt.kind){ 
               let el = document.createElement("option");
               el.textContent = opt.label;
-              el.value = opt.deviceId;
+              el.value = opt.deviceId+':'+opt.groupId;
               el.dataset.groupId = opt.groupId;
               select.appendChild(el);
             }
           }
         }
+
+    audioOutChanged =  function(){
+      let selectValue  = document.getElementById('audiooutput').value;
+      let deviceId  = selectValue.split(':')[0]
+      let groupId  = selectValue.split(':')[1]
+      console.log(deviceId);
+      console.log(groupId);
+      let parent =  document.getElementById(participantId);
+      if(parent){
+        let childAudio = null;
+        for (let i = 0; i < parent.children.length; i++) {
+          if(parent.children[i].tagName == 'AUDIO'){
+            childAudio =parent.children[i]
+          }
+        }
+        return typeof childAudio.setSinkId === 'function'
+        ? childAudio.setSinkId(deviceId)
+        : Promise.reject('This browser does not support setting an audio output device');
+      }
+    }
+    videoInChanged =  function(){
+      let selectValue  = document.getElementById('videoinput').value;
+      let deviceId  = selectValue.split(':')[0]
+      let groupId  = selectValue.split(':')[1]
+      console.log(deviceId);
+      console.log(groupId);
+      let parent =  document.getElementById(participantId);
+      if(parent){
+        // let childAudio = null;
+        // for (let i = 0; i < parent.children.length; i++) {
+        //   if(parent.children[i].tagName == 'VIDEO'){
+        //     childAudio =parent.children[i]
+        //   }
+        // }
+       
+        return Video.createLocalVideoTrack({
+          deviceId: {
+            exact: deviceId
+          }
+        }).then(function(localTrack) {
+          localTrack.attach(video);
+          if (room) {
+            switchLocalTracks(room, localTrack);
+          }
+        }).catch(function(error) {
+          console.log('applyVideoInputDeviceSelection failed:', error);
+        });
+      }
+    }
+  /**
+   * Apply the selected audio output device.
+   * @param {string} deviceId
+   * @param {HTMLAudioElement} audio
+   * @returns {Promise<void>}
+   */
+    function applyAudioOutputDeviceSelection(deviceId, audio) {
+      return typeof audio.setSinkId === 'function'
+        ? audio.setSinkId(deviceId)
+        : Promise.reject('This browser does not support setting an audio output device');
+    }
+    
+  /**
+   * Apply the selected audio input device.
+   * @param {string} deviceId
+   * @param {HTMLAudioElement} audio
+   * @param {Room} [room] - The Room, if you have already joined one
+   * @returns {Promise<void>}
+   */
+  function applyAudioInputDeviceSelection(deviceId, audio, room) {
+    return Video.createLocalAudioTrack({
+      deviceId: {
+        exact: deviceId // NOTE: on ios safari - it respects the deviceId only if its exact.
+      }
+    }).then(function(localTrack) {
+      localTrack.attach(audio);
+      if (room) {
+        switchLocalTracks(room, localTrack);
+      }
+    }).catch(function(error) {
+      console.log('applyAudioInputDeviceSelection failed:', error);
+    });
+  }  
+
+  /**
+   * Apply the selected video input device.
+   * @param {string} deviceId
+   * @param {HTMLVideoElement} video
+   * @param {Room} [room] - The Room, if you have already joined one
+   * @returns {Promise<void>}
+   */
+  function applyVideoInputDeviceSelection(deviceId, video, room) {
+    return Video.createLocalVideoTrack({
+      deviceId: {
+        exact: deviceId
+      }
+    }).then(function(localTrack) {
+      localTrack.attach(video);
+      if (room) {
+        switchLocalTracks(room, localTrack);
+      }
+    }).catch(function(error) {
+      console.log('applyVideoInputDeviceSelection failed:', error);
+    });
+  }
+
+  /**
+   * Replace the existing LocalAudioTrack or LocalVideoTrack with
+   * a new one in the Room.
+   * @param {Room} room - The Room you have joined
+   * @param {LocalAudioTrack|LocalVideoTrack} track - The LocalTrack you want to switch to
+   * @returns {void}
+   */
+    function switchLocalTracks(room, track) {
+      room.localParticipant.tracks.forEach(function(trackPublication) {
+        if (trackPublication.kind === track.kind) {
+          trackPublication.track.stop();
+          room.localParticipant.unpublishTrack(trackPublication.track);
+        }
+      });
+      room.localParticipant.publishTrack(track);
+    }
+
   } catch (error) {
     console.log(error)
   }
