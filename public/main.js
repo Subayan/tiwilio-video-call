@@ -237,12 +237,34 @@ let muteAudio, videoMute, participantId, audioOutChanged, videoInChanged, audioI
         : Promise.reject('This browser does not support setting an audio output device');
       }
     }
-    audioInChanged -  function(){
+    audioInChanged =  function(){
       let selectValue  = document.getElementById('audioinput').value;
       let deviceId  = selectValue.split(':')[0]
       let groupId  = selectValue.split(':')[1]
       console.log(deviceId);
       console.log(groupId);
+      let parent =  document.getElementById(participantId);
+      if(parent){
+
+      let childAudio = null;
+        for (let i = 0; i < parent.children.length; i++) {
+          if(parent.children[i].tagName == 'VIDEO'){
+            childAudio =parent.children[i]
+          }
+        }
+      return Video.createLocalAudioTrack({
+        deviceId: {
+          exact: deviceId // NOTE: on ios safari - it respects the deviceId only if its exact.
+        }
+      }).then(function(localTrack) {
+        localTrack.attach(childAudio);
+        if (room) {
+          switchLocalTracks(room, localTrack);
+        }
+      }).catch(function(error) {
+        console.log('applyAudioInputDeviceSelection failed:', error);
+      });
+    }
     }
     videoInChanged =  function(){
       let selectValue  = document.getElementById('videoinput').value;
