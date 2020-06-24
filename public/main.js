@@ -1,4 +1,4 @@
-let muteAudio, videoMute, participantId, audioOutChanged, videoInChanged;
+let muteAudio, videoMute, participantId, audioOutChanged, videoInChanged, audioInChanged;
 (async () => {
   try {
     let query = window.location.search;
@@ -236,6 +236,13 @@ let muteAudio, videoMute, participantId, audioOutChanged, videoInChanged;
         ? childAudio.setSinkId(deviceId)
         : Promise.reject('This browser does not support setting an audio output device');
       }
+    }
+    audioInChanged -  function(){
+      let selectValue  = document.getElementById('audioinput').value;
+      let deviceId  = selectValue.split(':')[0]
+      let groupId  = selectValue.split(':')[1]
+      console.log(deviceId);
+      console.log(groupId);
     }
     videoInChanged =  function(){
       let selectValue  = document.getElementById('videoinput').value;
