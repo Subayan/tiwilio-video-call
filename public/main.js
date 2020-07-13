@@ -3,6 +3,7 @@ let muteAudio, videoMute, participantId, audioOutChanged, videoInChanged, audioI
   try {
     let query = window.location.search;
     let name = new URLSearchParams(query).get('name');
+    let room = new URLSearchParams(query).get('room');
     console.log(name);
     if(!name){
       return alert('Put your name into URL ');
@@ -15,25 +16,18 @@ let muteAudio, videoMute, participantId, audioOutChanged, videoInChanged, audioI
     addToSelecElement('audiooutput',device.audiooutput)
     addToSelecElement('audioinput',device.audioinput)
     addToSelecElement('videoinput',device.videoinput)
-    console.log(device);
+    // console.log(device);
+    // name: 'subayan-room',
     await displayLocalVideo(videoElement);
     let room = await Video.connect(token, {
-      name: 'subayan-room',
-      audio: {
-        name: 'microphone'
-      },
-      video: {
-        name: 'camera'
-      },
-      networkQuality: {
-        local: 3,
-        remote: 3
-      }
+      name: room || 'subayan-room',
+      audio: { name: 'microphone'},
+      video: { name: 'camera' },
+      networkQuality: { local: 3, remote: 3 }
     })
     // }).then(function (room) {
-    //   console.log(room);
+    //  console.log(room);
     window.room =  room;  
-  
     // console.log(room)
     room.localParticipant.tracks.forEach(function (publication) {
       console.log(publication)
