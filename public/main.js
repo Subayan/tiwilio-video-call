@@ -3,7 +3,7 @@ let muteAudio, videoMute, participantId, audioOutChanged, videoInChanged, audioI
   try {
     let query = window.location.search;
     let name = new URLSearchParams(query).get('name');
-    let room = new URLSearchParams(query).get('room');
+    let roomName = new URLSearchParams(query).get('room');
     console.log(name);
     if(!name){
       return alert('Put your name into URL ');
@@ -20,7 +20,7 @@ let muteAudio, videoMute, participantId, audioOutChanged, videoInChanged, audioI
     // name: 'subayan-room',
     await displayLocalVideo(videoElement);
     let room = await Video.connect(token, {
-      name: room || 'subayan-room',
+      name: roomName || 'subayan-room',
       audio: { name: 'microphone'},
       video: { name: 'camera' },
       networkQuality: { local: 3, remote: 3 }
